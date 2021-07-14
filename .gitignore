@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.idea/
+
+acc2.json
+
+students_list.csv
+
+settings.py
