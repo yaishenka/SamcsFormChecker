@@ -1,7 +1,7 @@
 from tqdm import tqdm
 from settings import courses, keys_tables, answer_tables, key_field_name, key_column_name, done_text, done_column_name
 from google_sheets_reader import GoogleSheetsReader
-
+import time
 
 def get_all_keys(table):
     all_records = GoogleSheetsReader.get_all_records(table, 0)

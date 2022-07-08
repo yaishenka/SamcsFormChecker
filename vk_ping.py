@@ -1,7 +1,7 @@
 import vk_api
 import random
-from settings import keys_tables, key_field_name, key_column_name, done_text, done_column_name, group_prefix, invalid_text, student_column_name
-from vk_settings import token_config, peer_id_config, head_boy_config
+from settings import keys_tables, done_column_name, group_prefix, student_column_name
+from vk_settings import token_config, peer_id_config, head_boy_config, courses
 from google_sheets_reader import GoogleSheetsReader
 
 
@@ -15,8 +15,11 @@ def get_stat(key_table):
             current_group = cell_list[i].value
             result[current_group] = []
             continue
-        if cell_list[i + 2].value not in (done_text, invalid_text):
-            result[current_group].append(cell_list[i + 1].value)
+        cell_value = cell_list[i + 2].value.strip()
+        if cell_value == '':  # No comment, then invalid
+            id_not_listed = cell_list[i + 1].value.strip()
+            if id_not_listed != '':
+                result[current_group].append(id_not_listed)
     return result
 
 
@@ -46,16 +49,17 @@ def get_pretty_text(course):
         if not stat[group]:
             continue
 
-        text += f"\n{head_boys_to_group[group]} в твоей группе ({group}) осталось {len(stat[group])} айдишников: "
+        text += f"\n{head_boys_to_group[group]} в твоей группе ({group}) осталось {len(stat[group])} id: "
         text += ' '.join(stat[group])
     return text
 
 
 def send_message_to_group(course):
     text = get_pretty_text(course)
-    vk_session = vk_api.VkApi(token=token_config[4])
+    vk_session = vk_api.VkApi(token=token_config[course])
     vk = vk_session.get_api()
     vk.messages.send(message=text, peer_id=peer_id_config[course], random_id=random.randint(0, 2 ** 30))
 
 
-send_message_to_group(4)
+for course in courses:
+    send_message_to_group(course)
