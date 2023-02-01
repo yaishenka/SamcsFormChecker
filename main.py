@@ -11,15 +11,15 @@ def get_all_keys(table):
     return keys
 
 
-def get_all_keys_for_course(course):
+def get_all_keys_from_tables_list(tables):
     keys = set()
-    for answer_table in answer_tables[course]:
+    for answer_table in tables:
         keys.update(get_all_keys(answer_table))
     return keys
 
 
-def check_keys(key_table, keys):
-    sheet = GoogleSheetsReader.get_worksheet(key_table, 0)
+def check_keys(key_table, keys, worksheet):
+    sheet = GoogleSheetsReader.get_worksheet(key_table, worksheet)
     cell_list = sheet.range('{0}1:{1}{2}'.format(key_column_name, done_column_name, sheet.row_count))
     for i in range(0, len(cell_list) - 1, 2):
         if not cell_list[i].value:
@@ -30,8 +30,9 @@ def check_keys(key_table, keys):
 
 
 def process_course(course):
-    keys = get_all_keys_for_course(course)
-    check_keys(keys_tables[course], keys)
+    for answers_set in answer_tables[course]:
+        keys = get_all_keys_from_tables_list(answers_set['tables'])
+        check_keys(keys_tables[course], keys, answers_set['worksheet'])
 
 
 def main():
