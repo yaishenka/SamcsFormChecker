@@ -4,7 +4,11 @@ from google_sheets_reader import GoogleSheetsReader
 import time
 
 def get_all_keys(table):
-    all_records = GoogleSheetsReader.get_all_records(table, 0)
+    try:
+        all_records = GoogleSheetsReader.get_all_records(table, 0)
+    except:
+        print(f"Possibly no access to table {table}")
+        raise
     keys = set()
     for record in all_records:
         keys.add(record[key_field_name].lower().strip())
