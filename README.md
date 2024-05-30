@@ -1,6 +1,7 @@
 # SamcsFormChecker
 
-Вопросы можно задавать в t.me/yaishenka
+Последние несколько лет репозиторий поддерживался https://alexdremov.me
+Оригинально написано силами t.me/yaishenka 
 
 ## Описание
 
